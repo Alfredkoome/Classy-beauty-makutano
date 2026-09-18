@@ -408,7 +408,7 @@
           <div class="testimonial-author">
             <img src="https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?auto=format&fit=crop&w=100&q=75" alt="Portrait of client Faith K." loading="lazy">
             <div>
-              <span class="author-name">Alfred K.</span>
+              <span class="author-name">Faith K.</span>
               <span class="author-tag">New Client</span>
             </div>
           </div>
@@ -453,7 +453,7 @@
         <div class="form-row">
           <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="you@example.com"required>
+            <input type="email" id="email" name="email" placeholder="you@example.com">
             <span class="form-error">Please enter a valid email</span>
           </div>
           <div class="form-group">
@@ -561,7 +561,6 @@
         </div>
       </div>
     </div>
-    
   </section>
 
 </main>
@@ -581,7 +580,6 @@
         &#9993; @classybeautyhaven_makutano
       </a>
     </div>
-    
 
     <div class="footer-col">
       <h4>Quick Links</h4>
@@ -603,7 +601,7 @@
 
     <div class="footer-col">
       <h4>Contact</h4>
-      <a href="tel:+254706 479 847">0706 479 847</a>
+      <a href="tel:+254706479847">0706 479 847</a>
       <a href="tel:+254704523573">0704 523 573</a>
       <a href="#contact">Makutano, Kenya</a>
     </div>
@@ -867,14 +865,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const validators = {
     fullName: (v) => v.trim().length >= 2,
     phoneNumber: (v) => /^(\+?\d[\d\s-]{7,14})$/.test(v.trim()),
-    email: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
+    email: (v) => v.trim() === '' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
     service: (v) => v.trim() !== '',
     date: (v) => v.trim() !== '',
     time: (v) => v.trim() !== ''
   };
 
   if (bookingForm) {
-    bookingForm.addEventListener('submit',async (e) => {
+    bookingForm.addEventListener('submit', (e) => {
       e.preventDefault();
       let isValid = true;
 
@@ -893,46 +891,12 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-     
-  const appointmentData = {
-    name: bookingForm.elements.fullName.value.trim(),
-    phone: bookingForm.elements.phoneNumber.value.trim(),
-    email: bookingForm.elements.email.value.trim(),
-    service: bookingForm.elements.service.value,
-    appointment_date: bookingForm.elements.date.value,
-    appointment_time: bookingForm.elements.time.value,
-    notes: bookingForm.elements.notes.value.trim()
-};
+      // Simulate successful submission (no backend attached)
+      formSuccess.classList.add('show');
+      bookingForm.reset();
+      formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-try {
-  const response = await fetch('http://127.0.0.1:3000/appointments', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(appointmentData)
-  });
-
-  const message = await response.text();
-
-  if (!response.ok) {
-    throw new Error(message);
-  }
-
-  // Backend accepted the appointment
-  formSuccess.classList.add('show');
-  bookingForm.reset();
-  formSuccess.scrollIntoView({
-    behavior: 'smooth',
-    block: 'center'
-  });
-
-  setTimeout(() => formSuccess.classList.remove('show'), 8000);
-
-} catch (error) {
-  console.error(error);
-  alert('Could not send the appointment. Please try again.');
-}
+      setTimeout(() => formSuccess.classList.remove('show'), 8000);
     });
 
     // Clear invalid state as user types/selects
