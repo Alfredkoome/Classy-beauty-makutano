@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin - Classy Beauty Makutano</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: white;
+            padding: 30px;
+        }
+
+        h1 {
+            color: #c9a24b;
+            margin-bottom: 5px;
+        }
+
+        h2 {
+            margin-bottom: 25px;
+        }
+
+        /* =========================
+           STATISTICS
+        ========================= */
+
+        .stats-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            min-width: 150px;
+            flex: 1;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: #c9a24b;
+            margin: 0 0 10px;
+        }
+
+        .stat-card p {
+            font-size: 30px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        /* =========================
+           APPOINTMENTS TABLE
+        ========================= */
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #1a1a1a;
+        }
+
+        th {
+            background: #c9a24b;
+            color: #111;
+            padding: 12px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #333;
+        }
+
+        tr:hover {
+            background: #222;
+        }
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        button {
+            background: #c96a4b;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            margin: 3px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        /* =========================
+           EDIT BOX
+        ========================= */
+
+        #editBox {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            background: #1a1a1a;
+            border-radius: 10px;
+        }
+
+        #editBox h2 {
+            color: #c9a24b;
+        }
+
+        #editBox input,
+        #editBox textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            margin: 8px 0;
+
+            background: #222;
+            color: white;
+
+            border: 1px solid #444;
+            border-radius: 5px;
+        }
+
+        #editBox input:focus,
+        #editBox textarea:focus {
+            outline: none;
+            border-color: #c9a24b;
+        }
+
+        #editBox textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        #saveButton {
+            background: #c9a24b;
+            color: #111;
+            font-weight: bold;
+        }
+
+        #cancelButton {
+            background: #555;
+        }
+
+        /* =========================
+           STATUS DROPDOWN
+        ========================= */
+
+        .status-select {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            color: white;
+            background: #555;
+        }
+
+        .status-select:hover {
+            opacity: 0.85;
+        }
+
+        .status-select:focus {
+            outline: none;
+            box-shadow: 0 0 8px rgba(201, 162, 75, 0.5);
+        }
+
+        .status-pending {
+            background: #c9a24b;
+            color: #111;
+        }
+
+        .status-confirmed {
+            background: #2e8b57;
+        }
+
+        .status-completed {
+            background: #4169e1;
+        }
+
+        .status-cancelled {
+            background: #b44444;
+        }
+
+        /* =========================
+           UPCOMING APPOINTMENTS
+        ========================= */
+
+        .upcoming-container {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .upcoming-container h2 {
+            color: #c9a24b;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .upcoming-item {
+            background: #222;
+            border-left: 4px solid #c9a24b;
+            border-radius: 6px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+        }
+
+        .upcoming-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .upcoming-item strong {
+            color: #c9a24b;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 768px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .stats-container {
+                flex-direction: column;
+            }
+
+            .stat-card {
+                min-width: auto;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+        }
+        /* =========================
+   SEARCH & FILTER
+========================= */
+
+.filter-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.filter-container input,
+.filter-container select {
+    padding: 12px;
+    background: #222;
+    color: white;
+    border: 1px solid #444;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+.filter-container input {
+    flex: 1;
+    min-width: 250px;
+}
+
+.filter-container select {
+    min-width: 180px;
+}
+
+.filter-container input:focus,
+.filter-container select:focus {
+    outline: none;
+    border-color: #c9a24b;
+}
+
+
+        /* Customer Details */
+        #customerDetails { display:none; margin:25px 0; padding:20px; background:#1a1a1a; border:1px solid #333; border-radius:10px; }
+        #customerDetails h2 { color:#c9a24b; margin-top:0; }
+        .customer-detail-row { padding:8px 0; border-bottom:1px solid #333; }
+        .customer-detail-row strong { color:#c9a24b; }
+        .contact-link { color:#c9a24b; text-decoration:none; }
+        .contact-link:hover { text-decoration:underline; }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <h1>Classy Beauty Makutano</h1>
+
+    <h2>Admin Dashboard</h2>
+
+    <!-- =========================
+         TODAY'S APPOINTMENT REMINDER
+    ========================= -->
+
+    <div id="todayReminder" class="today-reminder">
+
+        <h3>📅 Today's Appointments</h3>
+
+        <p id="todayMessage">Checking today's appointments...</p>
+
+        <div id="todayAppointments"></div>
+
+    </div>
+
+
+    <!-- =========================
+         NEW APPOINTMENT NOTIFICATION
+    ========================= -->
+
+    <div class="notification-box">
+
+        <div class="notification-icon">🔔</div>
+
+        <div class="notification-text">
+            <strong>New Appointments</strong>
+            <br>
+            <span id="notificationMessage">
+                Checking appointments...
+            </span>
+        </div>
+
+        <span id="notificationCount" class="notification-badge">
+            0
+        </span>
+
+    </div>
+
+
+
+    <!-- =========================
+         STATISTICS
+    ========================= -->
+
+    <div class="stats-container">
+
+        <div class="stat-card">
+            <h3>Total</h3>
+            <p id="totalAppointments">0</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Pending</h3>
+            <p id="pendingAppointments">0</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Confirmed</h3>
+            <p id="confirmedAppointments">0</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Completed</h3>
+            <p id="completedAppointments">0</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Cancelled</h3>
+            <p id="cancelledAppointments">0</p>
+        </div>
+
+    </div>
+    <!-- =========================
+         UPCOMING APPOINTMENTS
+    ========================= -->
+
+    <div class="upcoming-container">
+
+        <h2>Upcoming Appointments</h2>
+
+        <div id="upcomingAppointments">
+
+            <p>No upcoming appointments.</p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         CUSTOMER DETAILS
+    ========================= -->
+
+    <div id="customerDetails">
+
+        <h2>Customer Details</h2>
+
+        <div id="customerDetailsContent"></div>
+
+        <button onclick="closeCustomerDetails()">
+            Close
+        </button>
+
+    </div>
+
+
+    <div class="filter-container">
+        <select
+    id="sortAppointments"
+    onchange="sortAppointments()"
+>
+    <option value="newest">Newest First</option>
+    <option value="oldest">Oldest First</option>
+</select>
+
+    <input
+        type="text"
+        id="searchAppointment"
+        placeholder="Search by name, phone or service..."
+        onkeyup="filterAppointments()"
+    >
+
+    <select
+        id="statusFilter"
+        onchange="filterAppointments()"
+    >
+        <option value="All">All Statuses</option>
+        <option value="Pending">Pending</option>
+        <option value="Confirmed">Confirmed</option>
+        <option value="Completed">Completed</option>
+        <option value="Cancelled">Cancelled</option>
+    </select>
+
+</div>
+
+
+    <!-- =========================
+         APPOINTMENTS TABLE
+    ========================= -->
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>ID</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Service</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Notes</th>
+                <th>Status</th>
+                <th>Action</th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody id="appointmentsTable">
+
+        </tbody>
+
+    </table>
+
+
+    <!-- =========================
+         EDIT APPOINTMENT BOX
+    ========================= -->
+
+    <div id="editBox">
+
+        <h2>Edit Appointment</h2>
+
+
+        <input
+            id="editName"
+            type="text"
+            placeholder="Name"
+        >
+
+
+        <input
+            id="editPhone"
+            type="text"
+            placeholder="Phone"
+        >
+
+
+        <input
+            id="editEmail"
+            type="email"
+            placeholder="Email"
+        >
+
+
+        <input
+            id="editService"
+            type="text"
+            placeholder="Service"
+        >
+
+
+        <input
+            id="editDate"
+            type="date"
+        >
+
+
+        <input
+            id="editTime"
+            type="time"
+        >
+
+
+        <textarea
+            id="editNotes"
+            placeholder="Notes"
+        ></textarea>
+
+
+        <button
+            id="saveButton"
+            onclick="saveAppointment()"
+        >
+            Save Changes
+        </button>
+
+
+        <button
+            id="cancelButton"
+            onclick="closeEdit()"
+        >
+            Cancel
+        </button>
+
+    </div>
+
+
+
+    <script>
+
+        // ==========================================
+        // ID OF APPOINTMENT BEING EDITED
+        // ==========================================
+
+        let editingAppointmentId = null;
+
+        fetch("http://127.0.0.1:3000/appointments")
+
+            .then(response => response.json())
+
+            .then(appointments => {
+
+                // ==============================
+                // CALCULATE STATISTICS
+                // ==============================
+
+                const total = appointments.length;
+
+                const pending = appointments.filter(
+                    appointment =>
+                        appointment.status === "Pending"
+                ).length;
+
+                const confirmed = appointments.filter(
+                    appointment =>
+                        appointment.status === "Confirmed"
+                ).length;
+
+                const completed = appointments.filter(
+                    appointment =>
+                        appointment.status === "Completed"
+                ).length;
+
+                const cancelled = appointments.filter(
+                    appointment =>
+                        appointment.status === "Cancelled"
+                ).length;
+
+
+                // ==============================
+                // DISPLAY STATISTICS
+                // ==============================
+
+                document.getElementById(
+                    "totalAppointments"
+                ).textContent = total;
+
+                document.getElementById(
+                    "pendingAppointments"
+                ).textContent = pending;
+
+                document.getElementById(
+                    "confirmedAppointments"
+                ).textContent = confirmed;
+
+                document.getElementById(
+                    "completedAppointments"
+                ).textContent = completed;
+
+                document.getElementById(
+                    "cancelledAppointments"
+                ).textContent = cancelled;
+
+
+                // ==============================
+                // DISPLAY UPCOMING APPOINTMENTS
+                // ==============================
+
+                const upcomingContainer =
+                    document.getElementById("upcomingAppointments");
+
+                const now = new Date();
+
+                const upcomingAppointments = appointments
+                    .map(appointment => {
+                        const appointmentDateTime = new Date(
+                            `${appointment.appointment_date}T${appointment.appointment_time}`
+                        );
+
+                        return {
+                            ...appointment,
+                            appointmentDateTime: appointmentDateTime
+                        };
+                    })
+                    .filter(appointment =>
+                        appointment.appointmentDateTime >= now &&
+                        appointment.status !== "Cancelled"
+                    )
+                    .sort((a, b) =>
+                        a.appointmentDateTime - b.appointmentDateTime
+                    );
+
+                if (upcomingAppointments.length === 0) {
+
+                    upcomingContainer.innerHTML =
+                        "<p>No upcoming appointments.</p>";
+
+                } else {
+
+                    upcomingContainer.innerHTML = "";
+
+                    upcomingAppointments.forEach(appointment => {
+
+                        const item =
+                            document.createElement("div");
+
+                        item.className = "upcoming-item";
+
+                        item.innerHTML = `
+                            <strong>${appointment.name}</strong>
+                            - ${appointment.service}
+                            <br>
+                            Date: ${appointment.appointment_date}
+                            <br>
+                            Time: ${appointment.appointment_time}
+                            <br>
+                            Status: ${appointment.status || "Pending"}
+                        `;
+
+                        upcomingContainer.appendChild(item);
+
+                    });
+
+                }
+
+
+                // ==============================
+                // DISPLAY APPOINTMENTS
+                // ==============================
+
+                const table =
+                    document.getElementById(
+                        "appointmentsTable"
+                    );
+
+
+                appointments.forEach(appointment => {
+
+                    const row =
+                        document.createElement("tr");
+
+
+                    row.innerHTML = `
+
+                        <td>${appointment.id}</td>
+
+                        <td>${appointment.name}</td>
+
+                        <td>${appointment.phone || ""}</td>
+
+                        <td>${appointment.email || ""}</td>
+
+                        <td>${appointment.service}</td>
+
+                        <td>${appointment.appointment_date}</td>
+
+                        <td>${appointment.appointment_time}</td>
+
+                        <td>${appointment.notes || ""}</td>
+
+
+                        <td>
+
+                            <select
+                                class="status-select status-${(
+                                    appointment.status || "Pending"
+                                ).toLowerCase()}"
+
+                                onchange="
+                                    updateStatus(
+                                        ${appointment.id},
+                                        this.value
+                                    )
+                                "
+                            >
+
+                                <option
+                                    value="Pending"
+                                    ${
+                                        appointment.status === "Pending"
+                                            ? "selected"
+                                            : ""
+                                    }
+                                >
+                                    Pending
+                                </option>
+
+
+                                <option
+                                    value="Confirmed"
+                                    ${
+                                        appointment.status === "Confirmed"
+                                            ? "selected"
+                                            : ""
+                                    }
+                                >
+                                    Confirmed
+                                </option>
+
+
+                                <option
+                                    value="Completed"
+                                    ${
+                                        appointment.status === "Completed"
+                                            ? "selected"
+                                            : ""
+                                    }
+                                >
+                                    Completed
+                                </option>
+
+
+                                <option
+                                    value="Cancelled"
+                                    ${
+                                        appointment.status === "Cancelled"
+                                            ? "selected"
+                                            : ""
+                                    }
+                                >
+                                    Cancelled
+                                </option>
+
+                            </select>
+
+                        </td>
+
+
+                        <td>
+
+                            <button
+                                onclick="viewCustomerDetails(${appointment.id})"
+                            >
+                                View Details
+                            </button>
+
+
+                            <button
+                                onclick="
+                                    editAppointment(
+                                        ${appointment.id}
+                                    )
+                                "
+                            >
+                                Edit
+                            </button>
+
+
+                            <button
+                                onclick="
+                                    deleteAppointment(
+                                        ${appointment.id}
+                                    )
+                                "
+                            >
+                                Delete
+                            </button>
+
+                        </td>
+
+                    `;
+
+
+                    table.appendChild(row);
+
+                });
+
+                // ==============================
+                // NEW APPOINTMENT NOTIFICATION
+                // ==============================
+
+                const newAppointments = appointments.filter(
+                    appointment =>
+                        (appointment.status || "Pending") === "Pending"
+                );
+
+                document.getElementById("notificationCount").textContent =
+                    newAppointments.length;
+
+                document.getElementById("notificationMessage").textContent =
+                    newAppointments.length === 0
+                    ? "No new appointments."
+                    : `${newAppointments.length} appointment${newAppointments.length === 1 ? "" : "s"} waiting for attention.`;
+
+                displayTodayAppointments(appointments);
+
+            })
+
+
+            .catch(error => {
+
+                console.error(
+                    "Error fetching appointments:",
+                    error
+                );
+
+            });
+
+        // ==========================================
+        // DISPLAY TODAY'S APPOINTMENTS
+        // ==========================================
+
+        function displayTodayAppointments(appointments) {
+
+            const todayContainer =
+                document.getElementById("todayAppointments");
+
+            const todayMessage =
+                document.getElementById("todayMessage");
+
+            const today = new Date();
+
+            const todayString =
+                today.getFullYear() + "-" +
+                String(today.getMonth() + 1).padStart(2, "0") + "-" +
+                String(today.getDate()).padStart(2, "0");
+
+            const todayAppointments = appointments
+                .filter(appointment =>
+                    appointment.appointment_date &&
+                    appointment.appointment_date.substring(0, 10) === todayString &&
+                    appointment.status !== "Cancelled"
+                )
+                .sort((a, b) =>
+                    String(a.appointment_time || "")
+                        .localeCompare(String(b.appointment_time || ""))
+                );
+
+            if (todayAppointments.length === 0) {
+
+                todayMessage.textContent =
+                    "No appointments scheduled for today.";
+
+                todayContainer.innerHTML = "";
+
+                return;
+            }
+
+            todayMessage.textContent =
+                `${todayAppointments.length} appointment${todayAppointments.length === 1 ? "" : "s"} scheduled for today.`;
+
+            todayContainer.innerHTML = "";
+
+            todayAppointments.forEach(appointment => {
+
+                const item =
+                    document.createElement("div");
+
+                item.className = "today-item";
+
+                item.innerHTML = `
+                    <strong>${appointment.name}</strong>
+                    - ${appointment.service}
+                    <br>
+                    Time: ${appointment.appointment_time}
+                    <br>
+                    Status: ${appointment.status || "Pending"}
+                `;
+
+                todayContainer.appendChild(item);
+
+            });
+        }
+
+
+
+
+
+        // ==========================================
+        // CUSTOMER DETAILS
+        // ==========================================
+
+        async function viewCustomerDetails(id) {
+
+            const response = await fetch(
+                `http://127.0.0.1:3000/appointments/${id}`
+            );
+
+            if (!response.ok) {
+                alert("Could not find customer details.");
+                return;
+            }
+
+            const appointment = await response.json();
+            const content = document.getElementById("customerDetailsContent");
+
+            content.innerHTML = `
+                <div class="customer-detail-row"><strong>Name:</strong> ${appointment.name || ""}</div>
+                <div class="customer-detail-row"><strong>Phone:</strong> <a class="contact-link" href="tel:${appointment.phone || ""}">${appointment.phone || "Not provided"}</a></div>
+                <div class="customer-detail-row"><strong>Email:</strong> <a class="contact-link" href="mailto:${appointment.email || ""}">${appointment.email || "Not provided"}</a></div>
+                <div class="customer-detail-row"><strong>Service:</strong> ${appointment.service || ""}</div>
+                <div class="customer-detail-row"><strong>Date:</strong> ${appointment.appointment_date || ""}</div>
+                <div class="customer-detail-row"><strong>Time:</strong> ${appointment.appointment_time || ""}</div>
+                <div class="customer-detail-row"><strong>Notes:</strong> ${appointment.notes || "No notes"}</div>
+                <div class="customer-detail-row"><strong>Status:</strong> ${appointment.status || "Pending"}</div>
+            `;
+
+            document.getElementById("customerDetails").style.display = "block";
+        }
+
+        function closeCustomerDetails() {
+            document.getElementById("customerDetails").style.display = "none";
+        }
+
+
+        // ==========================================
+        // EDIT APPOINTMENT
+        // ==========================================
+
+        async function editAppointment(id) {
+
+            const response = await fetch(
+                `http://127.0.0.1:3000/appointments/${id}`
+            );
+
+
+            if (!response.ok) {
+
+                alert(
+                    "Could not find appointment."
+                );
+
+                return;
+
+            }
+
+
+            const appointment =
+                await response.json();
+
+
+            editingAppointmentId = id;
+
+
+            document.getElementById(
+                "editName"
+            ).value =
+                appointment.name || "";
+
+
+            document.getElementById(
+                "editPhone"
+            ).value =
+                appointment.phone || "";
+
+
+            document.getElementById(
+                "editEmail"
+            ).value =
+                appointment.email || "";
+
+
+            document.getElementById(
+                "editService"
+            ).value =
+                appointment.service || "";
+
+
+            document.getElementById(
+                "editDate"
+            ).value =
+                appointment.appointment_date
+                    ? appointment.appointment_date.substring(0, 10)
+                    : "";
+
+
+            document.getElementById(
+                "editTime"
+            ).value =
+                appointment.appointment_time || "";
+
+
+            document.getElementById(
+                "editNotes"
+            ).value =
+                appointment.notes || "";
+
+
+            document.getElementById(
+                "editBox"
+            ).style.display = "block";
+
+        }
+
+
+
+        // ==========================================
+        // SAVE CHANGES
+        // ==========================================
+
+        async function saveAppointment() {
+
+            if (!editingAppointmentId) {
+
+                alert(
+                    "No appointment selected."
+                );
+
+                return;
+
+            }
+
+
+            const name =
+                document.getElementById(
+                    "editName"
+                ).value.trim();
+
+
+            const phone =
+                document.getElementById(
+                    "editPhone"
+                ).value.trim();
+
+
+            const email =
+                document.getElementById(
+                    "editEmail"
+                ).value.trim();
+
+
+            const service =
+                document.getElementById(
+                    "editService"
+                ).value.trim();
+
+
+            const date =
+                document.getElementById(
+                    "editDate"
+                ).value;
+
+
+            const time =
+                document.getElementById(
+                    "editTime"
+                ).value;
+
+
+            const notes =
+                document.getElementById(
+                    "editNotes"
+                ).value.trim();
+
+
+            if (
+                !name ||
+                !phone ||
+                !email ||
+                !service ||
+                !date ||
+                !time
+            ) {
+
+                alert(
+                    "Please fill in all required information."
+                );
+
+                return;
+
+            }
+
+
+            const response = await fetch(
+
+                `http://127.0.0.1:3000/appointments/${editingAppointmentId}`,
+
+                {
+
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        name: name,
+
+                        phone: phone,
+
+                        email: email,
+
+                        service: service,
+
+                        appointment_date: date,
+
+                        appointment_time: time,
+
+                        notes: notes
+
+                    })
+
+                }
+
+            );
+
+
+            if (response.ok) {
+
+                alert(
+                    "Appointment updated successfully!"
+                );
+
+                location.reload();
+
+            } else {
+
+                const errorMessage =
+                    await response.text();
+
+                console.error(
+                    errorMessage
+                );
+
+                alert(
+                    "Failed to update appointment."
+                );
+
+            }
+
+        }
+
+
+
+        // ==========================================
+        // CANCEL EDIT
+        // ==========================================
+
+        function closeEdit() {
+
+            document.getElementById(
+                "editBox"
+            ).style.display = "none";
+
+
+            editingAppointmentId = null;
+
+        }
+
+
+
+        // ==========================================
+        // DELETE APPOINTMENT
+        // ==========================================
+
+        async function deleteAppointment(id) {
+
+            const response = await fetch(
+
+                `http://127.0.0.1:3000/appointments/${id}`,
+
+                {
+                    method: "DELETE"
+                }
+
+            );
+
+
+            if (response.ok) {
+
+                alert(
+                    "Appointment deleted successfully!"
+                );
+
+                location.reload();
+
+            } else {
+
+                alert(
+                    "Failed to delete appointment."
+                );
+
+            }
+
+        }
+
+
+
+        // ==========================================
+        // UPDATE STATUS
+        // ==========================================
+
+        async function updateStatus(id, status) {
+
+            const select = event.target;
+
+
+            select.classList.remove(
+                "status-pending",
+                "status-confirmed",
+                "status-completed",
+                "status-cancelled"
+            );
+
+
+            select.classList.add(
+                `status-${status.toLowerCase()}`
+            );
+
+
+            const response = await fetch(
+
+                `http://127.0.0.1:3000/appointments/${id}/status`,
+
+                {
+
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        status: status
+                    })
+
+                }
+
+            );
+
+
+            if (response.ok) {
+
+                alert(
+                    "Status updated successfully!"
+                );
+
+            } else {
+
+                alert(
+                    "Failed to update status."
+                );
+
+            }
+
+        }
+        function filterAppointments() {
+
+    const search =
+        document.getElementById("searchAppointment")
+            .value
+            .toLowerCase();
+
+    const status =
+        document.getElementById("statusFilter").value;
+
+    const rows =
+        document.querySelectorAll("#appointmentsTable tr");
+
+    rows.forEach(row => {
+
+        const rowText =
+            row.textContent.toLowerCase();
+
+        const rowStatus =
+            row.querySelector(".status-select").value;
+
+        const matchesSearch =
+            rowText.includes(search);
+
+        const matchesStatus =
+            status === "All" ||
+            rowStatus === status;
+
+        if (matchesSearch && matchesStatus) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+
+    });
+
+}
+function sortAppointments() {
+
+    const sortOrder =
+        document.getElementById("sortAppointments").value;
+
+    const table =
+        document.getElementById("appointmentsTable");
+
+    const rows =
+        Array.from(table.querySelectorAll("tr"));
+
+    rows.sort((a, b) => {
+
+        const dateA = new Date(
+            a.cells[5].textContent + " " +
+            a.cells[6].textContent
+        );
+
+        const dateB = new Date(
+            b.cells[5].textContent + " " +
+            b.cells[6].textContent
+        );
+
+        if (sortOrder === "newest") {
+            return dateB - dateA;
+        } else {
+            return dateA - dateB;
+        }
+
+    });
+
+    rows.forEach(row => {
+        table.appendChild(row);
+    });
+
+}
+
+    </script>
+
+</body>
+
+</html>
