@@ -24,7 +24,7 @@ db.connect((err) => {
 });
 
 app.use(cors({
-    origin: true,
+    origin: "https://alfredkoome.github.io",
     credentials: true
 }));
 
