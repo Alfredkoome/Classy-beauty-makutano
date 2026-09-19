@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,10 +25,6 @@
         h2 {
             margin-bottom: 25px;
         }
-
-        /* =========================
-           STATISTICS
-        ========================= */
 
         .stats-container {
             display: flex;
@@ -57,10 +54,6 @@
             margin: 0;
         }
 
-        /* =========================
-           APPOINTMENTS TABLE
-        ========================= */
-
         table {
             width: 100%;
             border-collapse: collapse;
@@ -83,10 +76,6 @@
             background: #222;
         }
 
-        /* =========================
-           BUTTONS
-        ========================= */
-
         button {
             background: #c96a4b;
             color: white;
@@ -101,9 +90,11 @@
             opacity: 0.8;
         }
 
-        /* =========================
-           EDIT BOX
-        ========================= */
+        #logoutButton {
+            background: #b44444;
+            float: right;
+            margin-bottom: 20px;
+        }
 
         #editBox {
             display: none;
@@ -123,10 +114,8 @@
             box-sizing: border-box;
             padding: 12px;
             margin: 8px 0;
-
             background: #222;
             color: white;
-
             border: 1px solid #444;
             border-radius: 5px;
         }
@@ -151,10 +140,6 @@
         #cancelButton {
             background: #555;
         }
-
-        /* =========================
-           STATUS DROPDOWN
-        ========================= */
 
         .status-select {
             padding: 8px 12px;
@@ -192,10 +177,6 @@
             background: #b44444;
         }
 
-        /* =========================
-           UPCOMING APPOINTMENTS
-        ========================= */
-
         .upcoming-container {
             background: #1a1a1a;
             border: 1px solid #333;
@@ -226,10 +207,6 @@
             color: #c9a24b;
         }
 
-        /* =========================
-           MOBILE
-        ========================= */
-
         @media (max-width: 768px) {
 
             body {
@@ -250,11 +227,13 @@
                 white-space: nowrap;
             }
 
-        }
+            #logoutButton {
+                float: none;
+                display: block;
+                margin-bottom: 20px;
+            }
 
-        /* =========================
-           SEARCH & FILTER
-        ========================= */
+        }
 
         .filter-container {
             display: flex;
@@ -287,8 +266,6 @@
             outline: none;
             border-color: #c9a24b;
         }
-
-        /* Customer Details */
 
         #customerDetails {
             display: none;
@@ -326,16 +303,15 @@
 
 </head>
 
-
 <body>
+
+    <button id="logoutButton">
+        Logout
+    </button>
 
     <h1>Classy Beauty Makutano</h1>
 
     <h2>Admin Dashboard</h2>
-
-    <!-- =========================
-         TODAY'S APPOINTMENT REMINDER
-    ========================= -->
 
     <div id="todayReminder" class="today-reminder">
 
@@ -346,11 +322,6 @@
         <div id="todayAppointments"></div>
 
     </div>
-
-
-    <!-- =========================
-         NEW APPOINTMENT NOTIFICATION
-    ========================= -->
 
     <div class="notification-box">
 
@@ -369,12 +340,6 @@
         </span>
 
     </div>
-
-
-
-    <!-- =========================
-         STATISTICS
-    ========================= -->
 
     <div class="stats-container">
 
@@ -405,11 +370,6 @@
 
     </div>
 
-
-    <!-- =========================
-         UPCOMING APPOINTMENTS
-    ========================= -->
-
     <div class="upcoming-container">
 
         <h2>Upcoming Appointments</h2>
@@ -421,11 +381,6 @@
         </div>
 
     </div>
-
-
-    <!-- =========================
-         CUSTOMER DETAILS
-    ========================= -->
 
     <div id="customerDetails">
 
@@ -439,7 +394,6 @@
 
     </div>
 
-
     <div class="filter-container">
 
         <select
@@ -450,14 +404,12 @@
             <option value="oldest">Oldest First</option>
         </select>
 
-
         <input
             type="text"
             id="searchAppointment"
             placeholder="Search by name, phone or service..."
             onkeyup="filterAppointments()"
         >
-
 
         <select
             id="statusFilter"
@@ -471,11 +423,6 @@
         </select>
 
     </div>
-
-
-    <!-- =========================
-         APPOINTMENTS TABLE
-    ========================= -->
 
     <table>
 
@@ -498,22 +445,15 @@
 
         </thead>
 
-
         <tbody id="appointmentsTable">
 
         </tbody>
 
     </table>
 
-
-    <!-- =========================
-         EDIT APPOINTMENT BOX
-    ========================= -->
-
     <div id="editBox">
 
         <h2>Edit Appointment</h2>
-
 
         <input
             id="editName"
@@ -521,13 +461,11 @@
             placeholder="Name"
         >
 
-
         <input
             id="editPhone"
             type="text"
             placeholder="Phone"
         >
-
 
         <input
             id="editEmail"
@@ -535,31 +473,26 @@
             placeholder="Email"
         >
 
-
         <input
             id="editService"
             type="text"
             placeholder="Service"
         >
 
-
         <input
             id="editDate"
             type="date"
         >
-
 
         <input
             id="editTime"
             type="time"
         >
 
-
         <textarea
             id="editNotes"
             placeholder="Notes"
         ></textarea>
-
 
         <button
             id="saveButton"
@@ -567,7 +500,6 @@
         >
             Save Changes
         </button>
-
 
         <button
             id="cancelButton"
@@ -578,37 +510,98 @@
 
     </div>
 
-
-
     <script>
-
-        // ==========================================
-        // LIVE BACKEND URL
-        // ==========================================
 
         const API_URL =
             "https://classy-beauty-makutano-2.onrender.com";
-        if (sessionStorage.getItem("adminLoggedIn") !== "true") {
-    window.location.href = "admin_login.html";
-}
 
 
         // ==========================================
-        // ID OF APPOINTMENT BEING EDITED
+        // CHECK BACKEND SESSION
         // ==========================================
+
+        fetch(`${API_URL}/admin/check-session`, {
+            credentials: "include"
+        })
+        .then(response => {
+
+            if (!response.ok) {
+                window.location.href = "admin_login.html";
+                return;
+            }
+
+            return response.json();
+
+        })
+        .catch(() => {
+
+            window.location.href = "admin_login.html";
+
+        });
+
+
+        // ==========================================
+        // LOGOUT
+        // ==========================================
+
+        document.getElementById("logoutButton").addEventListener(
+            "click",
+            async () => {
+
+                try {
+
+                    const response = await fetch(
+                        `${API_URL}/admin/logout`,
+                        {
+                            method: "POST",
+                            credentials: "include"
+                        }
+                    );
+
+                    if (response.ok) {
+
+                        window.location.href =
+                            "admin_login.html";
+
+                    } else {
+
+                        alert("Logout failed.");
+
+                    }
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    alert("Could not connect to the server.");
+
+                }
+
+            }
+        );
+
 
         let editingAppointmentId = null;
 
 
-        fetch(`${API_URL}/appointments`)
+        fetch(`${API_URL}/appointments`, {
+            credentials: "include"
+        })
 
-            .then(response => response.json())
+            .then(response => {
+
+                if (response.status === 401) {
+                    window.location.href = "admin_login.html";
+                    return;
+                }
+
+                return response.json();
+
+            })
 
             .then(appointments => {
 
-                // ==============================
-                // CALCULATE STATISTICS
-                // ==============================
+                if (!appointments) return;
 
                 const total = appointments.length;
 
@@ -633,10 +626,6 @@
                 ).length;
 
 
-                // ==============================
-                // DISPLAY STATISTICS
-                // ==============================
-
                 document.getElementById(
                     "totalAppointments"
                 ).textContent = total;
@@ -657,10 +646,6 @@
                     "cancelledAppointments"
                 ).textContent = cancelled;
 
-
-                // ==============================
-                // DISPLAY UPCOMING APPOINTMENTS
-                // ==============================
 
                 const upcomingContainer =
                     document.getElementById("upcomingAppointments");
@@ -723,10 +708,6 @@
                 }
 
 
-                // ==============================
-                // DISPLAY APPOINTMENTS
-                // ==============================
-
                 const table =
                     document.getElementById(
                         "appointmentsTable"
@@ -757,7 +738,6 @@
 
                         <td>${appointment.notes || ""}</td>
 
-
                         <td>
 
                             <select
@@ -785,7 +765,6 @@
                                     Pending
                                 </option>
 
-
                                 <option
                                     value="Confirmed"
                                     ${
@@ -797,7 +776,6 @@
                                     Confirmed
                                 </option>
 
-
                                 <option
                                     value="Completed"
                                     ${
@@ -808,7 +786,6 @@
                                 >
                                     Completed
                                 </option>
-
 
                                 <option
                                     value="Cancelled"
@@ -825,7 +802,6 @@
 
                         </td>
 
-
                         <td>
 
                             <button
@@ -833,7 +809,6 @@
                             >
                                 View Details
                             </button>
-
 
                             <button
                                 onclick="
@@ -844,7 +819,6 @@
                             >
                                 Edit
                             </button>
-
 
                             <button
                                 onclick="
@@ -860,15 +834,10 @@
 
                     `;
 
-
                     table.appendChild(row);
 
                 });
 
-
-                // ==============================
-                // NEW APPOINTMENT NOTIFICATION
-                // ==============================
 
                 const newAppointments = appointments.filter(
                     appointment =>
@@ -888,7 +857,6 @@
 
             })
 
-
             .catch(error => {
 
                 console.error(
@@ -898,10 +866,6 @@
 
             });
 
-
-        // ==========================================
-        // DISPLAY TODAY'S APPOINTMENTS
-        // ==========================================
 
         function displayTodayAppointments(appointments) {
 
@@ -973,18 +937,22 @@
         }
 
 
-        // ==========================================
-        // CUSTOMER DETAILS
-        // ==========================================
-
         async function viewCustomerDetails(id) {
 
             const response = await fetch(
-                `${API_URL}/appointments/${id}`
+                `${API_URL}/appointments/${id}`,
+                {
+                    credentials: "include"
+                }
             );
 
 
             if (!response.ok) {
+
+                if (response.status === 401) {
+                    window.location.href = "admin_login.html";
+                    return;
+                }
 
                 alert(
                     "Could not find customer details."
@@ -1071,18 +1039,22 @@
         }
 
 
-        // ==========================================
-        // EDIT APPOINTMENT
-        // ==========================================
-
         async function editAppointment(id) {
 
             const response = await fetch(
-                `${API_URL}/appointments/${id}`
+                `${API_URL}/appointments/${id}`,
+                {
+                    credentials: "include"
+                }
             );
 
 
             if (!response.ok) {
+
+                if (response.status === 401) {
+                    window.location.href = "admin_login.html";
+                    return;
+                }
 
                 alert(
                     "Could not find appointment."
@@ -1150,10 +1122,6 @@
 
         }
 
-
-        // ==========================================
-        // SAVE CHANGES
-        // ==========================================
 
         async function saveAppointment() {
 
@@ -1240,6 +1208,8 @@
                         "Content-Type": "application/json"
                     },
 
+                    credentials: "include",
+
                     body: JSON.stringify({
 
                         name: name,
@@ -1261,6 +1231,12 @@
                 }
 
             );
+
+
+            if (response.status === 401) {
+                window.location.href = "admin_login.html";
+                return;
+            }
 
 
             if (response.ok) {
@@ -1289,10 +1265,6 @@
         }
 
 
-        // ==========================================
-        // CANCEL EDIT
-        // ==========================================
-
         function closeEdit() {
 
             document.getElementById(
@@ -1305,10 +1277,6 @@
         }
 
 
-        // ==========================================
-        // DELETE APPOINTMENT
-        // ==========================================
-
         async function deleteAppointment(id) {
 
             const response = await fetch(
@@ -1316,10 +1284,17 @@
                 `${API_URL}/appointments/${id}`,
 
                 {
-                    method: "DELETE"
+                    method: "DELETE",
+                    credentials: "include"
                 }
 
             );
+
+
+            if (response.status === 401) {
+                window.location.href = "admin_login.html";
+                return;
+            }
 
 
             if (response.ok) {
@@ -1340,10 +1315,6 @@
 
         }
 
-
-        // ==========================================
-        // UPDATE STATUS
-        // ==========================================
 
         async function updateStatus(id, status, select) {
 
@@ -1372,6 +1343,8 @@
                         "Content-Type": "application/json"
                     },
 
+                    credentials: "include",
+
                     body: JSON.stringify({
                         status: status
                     })
@@ -1379,6 +1352,12 @@
                 }
 
             );
+
+
+            if (response.status === 401) {
+                window.location.href = "admin_login.html";
+                return;
+            }
 
 
             if (response.ok) {
@@ -1397,10 +1376,6 @@
 
         }
 
-
-        // ==========================================
-        // FILTER APPOINTMENTS
-        // ==========================================
 
         function filterAppointments() {
 
@@ -1460,10 +1435,6 @@
 
         }
 
-
-        // ==========================================
-        // SORT APPOINTMENTS
-        // ==========================================
 
         function sortAppointments() {
 
@@ -1525,3 +1496,4 @@
 </body>
 
 </html>
+```
