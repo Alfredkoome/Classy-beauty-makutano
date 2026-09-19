@@ -9,7 +9,8 @@ const db = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT
 });
 
 db.connect((err) => {
@@ -143,7 +144,8 @@ app.put("/appointments/:id", (req, res) => {
         service,
         appointment_date,
         appointment_time,
-        notes
+        notes,
+        status
     } = req.body;
 
     const sql = `
@@ -155,7 +157,8 @@ app.put("/appointments/:id", (req, res) => {
             service = ?,
             appointment_date = ?,
             appointment_time = ?,
-            notes = ? 
+            notes = ?,
+            status = COALESCE(?, status)
         WHERE id = ? 
     `;
 
@@ -169,6 +172,7 @@ app.put("/appointments/:id", (req, res) => {
             appointment_date,
             appointment_time,
             notes,
+            status ?? null,
             id
         ],
         (err, result) => {
@@ -214,65 +218,25 @@ app.put("/appointments/:id/status", (req, res) => {
 
 });
 
+app.delete("/appointments/:id", (req, res) => {
+    const id = req.params.id;
+
+    db.query("DELETE FROM appointments WHERE id = ?", [id], (err, result) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).send("Error deleting appointment");
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).send("Appointment not found");
+        }
+
+        res.send("Appointment deleted successfully");
+    });
+});
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
     console.log(`MY CURRENT SERVER IS RUNNING ON PORT ${PORT}`);
-});
-
-app.put("/appointments/:id", (req, res) => {
-    const id = req.params.id;
-
-    const {
-        name,
-        phone,
-        email,
-        service,
-        appointment_date,
-        appointment_time,
-        notes,
-        status
-    } = req.body;
-
-    const sql = `
-        UPDATE appointments 
-        SET
-            name = ?,
-            phone = ?,
-            email = ?,
-            service = ?,
-            appointment_date = ?,
-            appointment_time = ?,
-            notes = ?,
-            status = ?
-        WHERE id = ?
-    `;
-
-    db.query(
-        sql,
-        [
-            name,
-            phone,
-            email,
-            service,
-            appointment_date,
-            appointment_time,
-            notes,
-            status,
-            id
-        ],
-        (err, result) => {
-
-            if (err) {
-                console.log(err);
-                return res.status(500).send("Error updating appointment");
-            }
-
-            if (result.affectedRows === 0) {
-                return res.status(404).send("Appointment not found");
-            }
-
-            res.send("Appointment updated successfully");
-        }
-    );
 });
