@@ -252,6 +252,10 @@
         color: #c9a24b;
     }
 
+    html {
+        scroll-behavior: smooth;
+    }
+
     @media (max-width: 768px) {
 
         body {
@@ -985,22 +989,36 @@
 
             .map(appointment => {
 
-                const appointmentDateTime = new Date(
-                    `${appointment.appointment_date}T${appointment.appointment_time}`
-                );
+                const appointmentDate =
+                    String(appointment.appointment_date)
+                        .substring(0, 10);
+
+                const appointmentTime =
+                    String(appointment.appointment_time)
+                        .substring(0, 8);
+
+                const appointmentDateTime =
+                    new Date(
+                        `${appointmentDate}T${appointmentTime}`
+                    );
 
                 return {
                     ...appointment,
-                    appointmentDateTime: appointmentDateTime
+                    appointmentDate,
+                    appointmentTime,
+                    appointmentDateTime
                 };
 
             })
 
             .filter(appointment =>
-                appointment.appointment_date &&
-                appointment.appointment_date.substring(0, 10) === todayString &&
+
+                appointment.appointmentDate === todayString &&
+
                 appointment.appointmentDateTime >= now &&
+
                 appointment.status !== "Cancelled"
+
             )
 
             .sort((a, b) =>
@@ -1036,7 +1054,7 @@
                 <strong>${appointment.name}</strong>
                 - ${appointment.service}
                 <br>
-                Time: ${appointment.appointment_time}
+                Time: ${appointment.appointmentTime}
                 <br>
                 Status: ${appointment.status || "Pending"}
             `;
@@ -1151,6 +1169,13 @@
             "customerDetails"
         ).style.display = "block";
 
+        document.getElementById(
+            "customerDetails"
+        ).scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
     }
 
 
@@ -1243,6 +1268,13 @@
         document.getElementById(
             "editBox"
         ).style.display = "block";
+
+        document.getElementById(
+            "editBox"
+        ).scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
 
     }
 
