@@ -588,6 +588,9 @@
 
         const API_URL =
             "https://classy-beauty-makutano-2.onrender.com";
+        if (sessionStorage.getItem("adminLoggedIn") !== "true") {
+    window.location.href = "admin_login.html";
+}
 
 
         // ==========================================
