@@ -251,50 +251,76 @@
             }
 
         }
+
         /* =========================
-   SEARCH & FILTER
-========================= */
+           SEARCH & FILTER
+        ========================= */
 
-.filter-container {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 25px;
-    flex-wrap: wrap;
-}
+        .filter-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
 
-.filter-container input,
-.filter-container select {
-    padding: 12px;
-    background: #222;
-    color: white;
-    border: 1px solid #444;
-    border-radius: 6px;
-    font-size: 15px;
-}
+        .filter-container input,
+        .filter-container select {
+            padding: 12px;
+            background: #222;
+            color: white;
+            border: 1px solid #444;
+            border-radius: 6px;
+            font-size: 15px;
+        }
 
-.filter-container input {
-    flex: 1;
-    min-width: 250px;
-}
+        .filter-container input {
+            flex: 1;
+            min-width: 250px;
+        }
 
-.filter-container select {
-    min-width: 180px;
-}
+        .filter-container select {
+            min-width: 180px;
+        }
 
-.filter-container input:focus,
-.filter-container select:focus {
-    outline: none;
-    border-color: #c9a24b;
-}
-
+        .filter-container input:focus,
+        .filter-container select:focus {
+            outline: none;
+            border-color: #c9a24b;
+        }
 
         /* Customer Details */
-        #customerDetails { display:none; margin:25px 0; padding:20px; background:#1a1a1a; border:1px solid #333; border-radius:10px; }
-        #customerDetails h2 { color:#c9a24b; margin-top:0; }
-        .customer-detail-row { padding:8px 0; border-bottom:1px solid #333; }
-        .customer-detail-row strong { color:#c9a24b; }
-        .contact-link { color:#c9a24b; text-decoration:none; }
-        .contact-link:hover { text-decoration:underline; }
+
+        #customerDetails {
+            display: none;
+            margin: 25px 0;
+            padding: 20px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 10px;
+        }
+
+        #customerDetails h2 {
+            color: #c9a24b;
+            margin-top: 0;
+        }
+
+        .customer-detail-row {
+            padding: 8px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .customer-detail-row strong {
+            color: #c9a24b;
+        }
+
+        .contact-link {
+            color: #c9a24b;
+            text-decoration: none;
+        }
+
+        .contact-link:hover {
+            text-decoration: underline;
+        }
 
     </style>
 
@@ -378,6 +404,8 @@
         </div>
 
     </div>
+
+
     <!-- =========================
          UPCOMING APPOINTMENTS
     ========================= -->
@@ -413,33 +441,36 @@
 
 
     <div class="filter-container">
+
         <select
-    id="sortAppointments"
-    onchange="sortAppointments()"
->
-    <option value="newest">Newest First</option>
-    <option value="oldest">Oldest First</option>
-</select>
+            id="sortAppointments"
+            onchange="sortAppointments()"
+        >
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+        </select>
 
-    <input
-        type="text"
-        id="searchAppointment"
-        placeholder="Search by name, phone or service..."
-        onkeyup="filterAppointments()"
-    >
 
-    <select
-        id="statusFilter"
-        onchange="filterAppointments()"
-    >
-        <option value="All">All Statuses</option>
-        <option value="Pending">Pending</option>
-        <option value="Confirmed">Confirmed</option>
-        <option value="Completed">Completed</option>
-        <option value="Cancelled">Cancelled</option>
-    </select>
+        <input
+            type="text"
+            id="searchAppointment"
+            placeholder="Search by name, phone or service..."
+            onkeyup="filterAppointments()"
+        >
 
-</div>
+
+        <select
+            id="statusFilter"
+            onchange="filterAppointments()"
+        >
+            <option value="All">All Statuses</option>
+            <option value="Pending">Pending</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Completed">Completed</option>
+            <option value="Cancelled">Cancelled</option>
+        </select>
+
+    </div>
 
 
     <!-- =========================
@@ -552,12 +583,21 @@
     <script>
 
         // ==========================================
+        // LIVE BACKEND URL
+        // ==========================================
+
+        const API_URL =
+            "https://classy-beauty-makutano-2.onrender.com";
+
+
+        // ==========================================
         // ID OF APPOINTMENT BEING EDITED
         // ==========================================
 
         let editingAppointmentId = null;
 
-        fetch("http://127.0.0.1:3000/appointments")
+
+        fetch(`${API_URL}/appointments`)
 
             .then(response => response.json())
 
@@ -626,6 +666,7 @@
 
                 const upcomingAppointments = appointments
                     .map(appointment => {
+
                         const appointmentDateTime = new Date(
                             `${appointment.appointment_date}T${appointment.appointment_time}`
                         );
@@ -634,6 +675,7 @@
                             ...appointment,
                             appointmentDateTime: appointmentDateTime
                         };
+
                     })
                     .filter(appointment =>
                         appointment.appointmentDateTime >= now &&
@@ -642,6 +684,7 @@
                     .sort((a, b) =>
                         a.appointmentDateTime - b.appointmentDateTime
                     );
+
 
                 if (upcomingAppointments.length === 0) {
 
@@ -722,7 +765,8 @@
                                 onchange="
                                     updateStatus(
                                         ${appointment.id},
-                                        this.value
+                                        this.value,
+                                        this
                                     )
                                 "
                             >
@@ -818,6 +862,7 @@
 
                 });
 
+
                 // ==============================
                 // NEW APPOINTMENT NOTIFICATION
                 // ==============================
@@ -835,6 +880,7 @@
                     ? "No new appointments."
                     : `${newAppointments.length} appointment${newAppointments.length === 1 ? "" : "s"} waiting for attention.`;
 
+
                 displayTodayAppointments(appointments);
 
             })
@@ -848,6 +894,7 @@
                 );
 
             });
+
 
         // ==========================================
         // DISPLAY TODAY'S APPOINTMENTS
@@ -868,16 +915,20 @@
                 String(today.getMonth() + 1).padStart(2, "0") + "-" +
                 String(today.getDate()).padStart(2, "0");
 
+
             const todayAppointments = appointments
+
                 .filter(appointment =>
                     appointment.appointment_date &&
                     appointment.appointment_date.substring(0, 10) === todayString &&
                     appointment.status !== "Cancelled"
                 )
+
                 .sort((a, b) =>
                     String(a.appointment_time || "")
                         .localeCompare(String(b.appointment_time || ""))
                 );
+
 
             if (todayAppointments.length === 0) {
 
@@ -889,10 +940,12 @@
                 return;
             }
 
+
             todayMessage.textContent =
                 `${todayAppointments.length} appointment${todayAppointments.length === 1 ? "" : "s"} scheduled for today.`;
 
             todayContainer.innerHTML = "";
+
 
             todayAppointments.forEach(appointment => {
 
@@ -913,10 +966,8 @@
                 todayContainer.appendChild(item);
 
             });
+
         }
-
-
-
 
 
         // ==========================================
@@ -926,33 +977,94 @@
         async function viewCustomerDetails(id) {
 
             const response = await fetch(
-                `http://127.0.0.1:3000/appointments/${id}`
+                `${API_URL}/appointments/${id}`
             );
 
+
             if (!response.ok) {
-                alert("Could not find customer details.");
+
+                alert(
+                    "Could not find customer details."
+                );
+
                 return;
+
             }
 
-            const appointment = await response.json();
-            const content = document.getElementById("customerDetailsContent");
+
+            const appointment =
+                await response.json();
+
+
+            const content =
+                document.getElementById(
+                    "customerDetailsContent"
+                );
+
 
             content.innerHTML = `
                 <div class="customer-detail-row"><strong>Name:</strong> ${appointment.name || ""}</div>
-                <div class="customer-detail-row"><strong>Phone:</strong> <a class="contact-link" href="tel:${appointment.phone || ""}">${appointment.phone || "Not provided"}</a></div>
-                <div class="customer-detail-row"><strong>Email:</strong> <a class="contact-link" href="mailto:${appointment.email || ""}">${appointment.email || "Not provided"}</a></div>
-                <div class="customer-detail-row"><strong>Service:</strong> ${appointment.service || ""}</div>
-                <div class="customer-detail-row"><strong>Date:</strong> ${appointment.appointment_date || ""}</div>
-                <div class="customer-detail-row"><strong>Time:</strong> ${appointment.appointment_time || ""}</div>
-                <div class="customer-detail-row"><strong>Notes:</strong> ${appointment.notes || "No notes"}</div>
-                <div class="customer-detail-row"><strong>Status:</strong> ${appointment.status || "Pending"}</div>
+
+                <div class="customer-detail-row">
+                    <strong>Phone:</strong>
+                    <a
+                        class="contact-link"
+                        href="tel:${appointment.phone || ""}"
+                    >
+                        ${appointment.phone || "Not provided"}
+                    </a>
+                </div>
+
+                <div class="customer-detail-row">
+                    <strong>Email:</strong>
+                    <a
+                        class="contact-link"
+                        href="mailto:${appointment.email || ""}"
+                    >
+                        ${appointment.email || "Not provided"}
+                    </a>
+                </div>
+
+                <div class="customer-detail-row">
+                    <strong>Service:</strong>
+                    ${appointment.service || ""}
+                </div>
+
+                <div class="customer-detail-row">
+                    <strong>Date:</strong>
+                    ${appointment.appointment_date || ""}
+                </div>
+
+                <div class="customer-detail-row">
+                    <strong>Time:</strong>
+                    ${appointment.appointment_time || ""}
+                </div>
+
+                <div class="customer-detail-row">
+                    <strong>Notes:</strong>
+                    ${appointment.notes || "No notes"}
+                </div>
+
+                <div class="customer-detail-row">
+                    <strong>Status:</strong>
+                    ${appointment.status || "Pending"}
+                </div>
             `;
 
-            document.getElementById("customerDetails").style.display = "block";
+
+            document.getElementById(
+                "customerDetails"
+            ).style.display = "block";
+
         }
 
+
         function closeCustomerDetails() {
-            document.getElementById("customerDetails").style.display = "none";
+
+            document.getElementById(
+                "customerDetails"
+            ).style.display = "none";
+
         }
 
 
@@ -963,7 +1075,7 @@
         async function editAppointment(id) {
 
             const response = await fetch(
-                `http://127.0.0.1:3000/appointments/${id}`
+                `${API_URL}/appointments/${id}`
             );
 
 
@@ -1034,7 +1146,6 @@
             ).style.display = "block";
 
         }
-
 
 
         // ==========================================
@@ -1116,7 +1227,7 @@
 
             const response = await fetch(
 
-                `http://127.0.0.1:3000/appointments/${editingAppointmentId}`,
+                `${API_URL}/appointments/${editingAppointmentId}`,
 
                 {
 
@@ -1175,7 +1286,6 @@
         }
 
 
-
         // ==========================================
         // CANCEL EDIT
         // ==========================================
@@ -1192,7 +1302,6 @@
         }
 
 
-
         // ==========================================
         // DELETE APPOINTMENT
         // ==========================================
@@ -1201,7 +1310,7 @@
 
             const response = await fetch(
 
-                `http://127.0.0.1:3000/appointments/${id}`,
+                `${API_URL}/appointments/${id}`,
 
                 {
                     method: "DELETE"
@@ -1229,15 +1338,11 @@
         }
 
 
-
         // ==========================================
         // UPDATE STATUS
         // ==========================================
 
-        async function updateStatus(id, status) {
-
-            const select = event.target;
-
+        async function updateStatus(id, status, select) {
 
             select.classList.remove(
                 "status-pending",
@@ -1254,7 +1359,7 @@
 
             const response = await fetch(
 
-                `http://127.0.0.1:3000/appointments/${id}/status`,
+                `${API_URL}/appointments/${id}/status`,
 
                 {
 
@@ -1288,79 +1393,129 @@
             }
 
         }
+
+
+        // ==========================================
+        // FILTER APPOINTMENTS
+        // ==========================================
+
         function filterAppointments() {
 
-    const search =
-        document.getElementById("searchAppointment")
-            .value
-            .toLowerCase();
+            const search =
+                document.getElementById("searchAppointment")
+                    .value
+                    .toLowerCase();
 
-    const status =
-        document.getElementById("statusFilter").value;
 
-    const rows =
-        document.querySelectorAll("#appointmentsTable tr");
+            const status =
+                document.getElementById(
+                    "statusFilter"
+                ).value;
 
-    rows.forEach(row => {
 
-        const rowText =
-            row.textContent.toLowerCase();
+            const rows =
+                document.querySelectorAll(
+                    "#appointmentsTable tr"
+                );
 
-        const rowStatus =
-            row.querySelector(".status-select").value;
 
-        const matchesSearch =
-            rowText.includes(search);
+            rows.forEach(row => {
 
-        const matchesStatus =
-            status === "All" ||
-            rowStatus === status;
+                const rowText =
+                    row.textContent.toLowerCase();
 
-        if (matchesSearch && matchesStatus) {
-            row.style.display = "";
-        } else {
-            row.style.display = "none";
+
+                const rowStatus =
+                    row.querySelector(
+                        ".status-select"
+                    ).value;
+
+
+                const matchesSearch =
+                    rowText.includes(search);
+
+
+                const matchesStatus =
+                    status === "All" ||
+                    rowStatus === status;
+
+
+                if (
+                    matchesSearch &&
+                    matchesStatus
+                ) {
+
+                    row.style.display = "";
+
+                } else {
+
+                    row.style.display = "none";
+
+                }
+
+            });
+
         }
 
-    });
 
-}
-function sortAppointments() {
+        // ==========================================
+        // SORT APPOINTMENTS
+        // ==========================================
 
-    const sortOrder =
-        document.getElementById("sortAppointments").value;
+        function sortAppointments() {
 
-    const table =
-        document.getElementById("appointmentsTable");
+            const sortOrder =
+                document.getElementById(
+                    "sortAppointments"
+                ).value;
 
-    const rows =
-        Array.from(table.querySelectorAll("tr"));
 
-    rows.sort((a, b) => {
+            const table =
+                document.getElementById(
+                    "appointmentsTable"
+                );
 
-        const dateA = new Date(
-            a.cells[5].textContent + " " +
-            a.cells[6].textContent
-        );
 
-        const dateB = new Date(
-            b.cells[5].textContent + " " +
-            b.cells[6].textContent
-        );
+            const rows =
+                Array.from(
+                    table.querySelectorAll("tr")
+                );
 
-        if (sortOrder === "newest") {
-            return dateB - dateA;
-        } else {
-            return dateA - dateB;
+
+            rows.sort((a, b) => {
+
+                const dateA = new Date(
+                    a.cells[5].textContent + " " +
+                    a.cells[6].textContent
+                );
+
+
+                const dateB = new Date(
+                    b.cells[5].textContent + " " +
+                    b.cells[6].textContent
+                );
+
+
+                if (sortOrder === "newest") {
+
+                    return dateB - dateA;
+
+                } else {
+
+                    return dateA - dateB;
+
+                }
+
+            });
+
+
+            rows.forEach(row => {
+
+                table.appendChild(row);
+
+            });
+
         }
-
-    });
-
-    rows.forEach(row => {
-        table.appendChild(row);
-    });
-
-}
 
     </script>
 
