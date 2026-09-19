@@ -24,6 +24,11 @@ db.connect((err) => {
 });
 app.use(cors());
 app.use(express.json());
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
+}));
 
 const deleteAppointmentLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
