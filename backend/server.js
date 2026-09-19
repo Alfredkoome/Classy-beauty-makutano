@@ -3,13 +3,15 @@ require("dotenv").config();
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
+const { rateLimit } = require("express-rate-limit");
 const app = express();
 
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT
 });
 
 db.connect((err) => {
@@ -21,6 +23,13 @@ db.connect((err) => {
 });
 app.use(cors());
 app.use(express.json());
+
+const deleteAppointmentLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 30,
+    standardHeaders: true,
+    legacyHeaders: false
+});
 
 // Home route 
 app.get("/", (req, res) => {
@@ -132,60 +141,6 @@ app.post("/admin/login", (req, res) => {
     }
 
 });
-app.put("/appointments/:id", (req, res) => {
-
-    const id = req.params.id;
-
-    const {
-        name,
-        phone,
-        email,
-        service,
-        appointment_date,
-        appointment_time,
-        notes
-    } = req.body;
-
-    const sql = `
-        UPDATE appointments 
-        SET
-            name = ?,
-            phone = ?,
-            email = ?,
-            service = ?,
-            appointment_date = ?,
-            appointment_time = ?,
-            notes = ? 
-        WHERE id = ? 
-    `;
-
-    db.query(
-        sql,
-        [
-            name,
-            phone,
-            email,
-            service,
-            appointment_date,
-            appointment_time,
-            notes,
-            id
-        ],
-        (err, result) => {
-
-            if (err) {
-                console.log(err);
-                return res.status(500).send("Error updating appointment");
-            }
-
-            if (result.affectedRows === 0) {
-                return res.status(404).send("Appointment not found");
-            }
-
-            res.send("Appointment updated successfully");
-        }
-    );
-});
 app.put("/appointments/:id/status", (req, res) => {
 
     const id = req.params.id;
@@ -214,10 +169,21 @@ app.put("/appointments/:id/status", (req, res) => {
 
 });
 
-const PORT = process.env.PORT || 3000;
+app.delete("/appointments/:id", deleteAppointmentLimiter, (req, res) => {
+    const id = req.params.id;
 
-app.listen(PORT, () => {
-    console.log(`MY CURRENT SERVER IS RUNNING ON PORT ${PORT}`);
+    db.query("DELETE FROM appointments WHERE id = ?", [id], (err, result) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).send("Error deleting appointment");
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).send("Appointment not found");
+        }
+
+        res.send("Appointment deleted successfully");
+    });
 });
 
 app.put("/appointments/:id", (req, res) => {
@@ -275,4 +241,10 @@ app.put("/appointments/:id", (req, res) => {
             res.send("Appointment updated successfully");
         }
     );
+});
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`MY CURRENT SERVER IS RUNNING ON PORT ${PORT}`);
 });
