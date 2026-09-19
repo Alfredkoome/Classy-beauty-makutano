@@ -156,6 +156,7 @@ input:focus {
             const result = await response.text();
 
             if (response.ok) {
+                sessionStorage.setItem("adminLoggedIn", "true");
                 window.location.href = "admin.html";
             } else {
                 document.getElementById("message").textContent = result;
